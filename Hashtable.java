@@ -68,31 +68,38 @@ public class Hashtable {
 	public String remove(String key) throws Exception {
 		if (!containsKey(key))
 			throw new Exception();
-		
+
 		int index = hashCode(key) % arr.length;
 		HashNode start = arr[index];
-		String removed = null;
 		
 		if (start == null) {
 			return null;
-		} else if (start.key.equals(key)) {
-			removed = start.value;
-			arr[index] = start.next;
-			size--;
 		} else {
+			String removed = null;
 			int count = 0;
-			while (start.next != null) {
-				while (start.next.key.equals(key)) {
-					count++;
-					if (count == 1)
-						removed = start.next.value;
-					start.next = start.next.next;
-					size--;
-					continue;
-				}
-				start = start.next;
+
+			if (start.key.equals(key)) {
+				removed = start.value;
+				arr[index] = start.next;
+				size--;
+				start = arr[index];
+				count++;
 			}
+
+			if (containsKey(key)) {
+				while (start.next != null) {
+					while (start.next != null && start.next.key.equals(key)) {
+						count++;
+						if (count == 1) {
+							removed = start.next.value;
+							size--;
+						}
+						start.next = start.next.next;
+					}
+					start = start.next;
+				}
+			}
+			return removed;
 		}
-		return removed;
 	}
 }
