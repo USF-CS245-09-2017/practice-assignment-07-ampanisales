@@ -24,13 +24,8 @@ public class Hashtable {
 		size = 0;
 	}
 	
-	//Mid-squaring
-	public int hashCode(String key) {
-		return (int) Math.pow(Character.getNumericValue(key.charAt(key.length()/2)), 2);
-	}
-	
 	public void put(String key, String value) {
-		int index = hashCode(key) % arr.length;
+		int index = Math.abs(key.hashCode()) % arr.length;
 		HashNode newNode = new HashNode(key, value);
 		newNode.next = arr[index];
 		arr[index] = newNode;
@@ -39,7 +34,7 @@ public class Hashtable {
 	}
 	
 	public boolean containsKey(String key) {
-		int index = hashCode(key) % arr.length;
+		int index = Math.abs(key.hashCode()) % arr.length;
 		HashNode start = arr[index];
 		
 		while (start != null) {
@@ -54,7 +49,7 @@ public class Hashtable {
 		if (!containsKey(key))
 			return null;
 
-		int index = hashCode(key) % arr.length;
+		int index = Math.abs(key.hashCode()) % arr.length;
 		HashNode start = arr[index];
 		
 		while (start != null) {
@@ -69,7 +64,7 @@ public class Hashtable {
 		if (!containsKey(key))
 			throw new Exception();
 
-		int index = hashCode(key) % arr.length;
+		int index = Math.abs(key.hashCode()) % arr.length;
 		HashNode start = arr[index];
 		
 		if (start == null) {
