@@ -26,11 +26,22 @@ public class Hashtable {
 	
 	public void put(String key, String value) {
 		int index = Math.abs(key.hashCode()) % arr.length;
-		HashNode newNode = new HashNode(key, value);
-		newNode.next = arr[index];
-		arr[index] = newNode;
-		if (!containsKey(key))
+		if (containsKey(key)) {
+			HashNode start = arr[index];
+			while (start != null) {
+				if (start.key.equals(key)) {
+					start.value = value;
+					return;
+				}				
+				start = start.next;
+			}
+		} else {
+			HashNode newNode = new HashNode(key, value);
+			newNode.next = arr[index];
+			arr[index] = newNode;
 			size++;
+		}
+
 	}
 	
 	public boolean containsKey(String key) {
@@ -66,35 +77,23 @@ public class Hashtable {
 
 		int index = Math.abs(key.hashCode()) % arr.length;
 		HashNode start = arr[index];
+		String removed = null;
 		
 		if (start == null) {
 			return null;
+		} else if (start.key.equals(key)) {
+			removed = start.value;
+			arr[index] = start.next;
 		} else {
-			String removed = null;
-			int count = 0;
-
-			if (start.key.equals(key)) {
-				removed = start.value;
-				arr[index] = start.next;
-				size--;
-				start = arr[index];
-				count++;
+			while (start.next != null) {
+				if (start.next.key.equals(key))
+					break;
+				start = start.next;
 			}
-
-			if (containsKey(key)) {
-				while (start.next != null) {
-					while (start.next != null && start.next.key.equals(key)) {
-						count++;
-						if (count == 1) {
-							removed = start.next.value;
-							size--;
-						}
-						start.next = start.next.next;
-					}
-					start = start.next;
-				}
-			}
-			return removed;
+			removed = start.next.value;
+			start.next = start.next.next;
 		}
+		size--;
+		return removed;
 	}
 }
